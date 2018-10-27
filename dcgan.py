@@ -40,14 +40,14 @@ class GAN():
 
         # discriminator model
         self.discriminator = model.build_discriminator(self.img_shape)
-        plot_model(self.discriminator, to_file='./images/model/discriminator.png', show_shapes=True)
+        plot_model(self.discriminator, to_file='./images/discriminator.png', show_shapes=True)
         self.discriminator.compile(loss= 'binary_crossentropy',
             optimizer=discriminator_optimizer,
             metrics=['accuracy'])
 
         # generator model
-        self.generator = model.build_generator()
-        plot_model(self.generator, to_file='./images/model/generator.png', show_shapes=True)
+        self.generator = model.build_generator(self.z_dim)
+        plot_model(self.generator, to_file='./images/generator.png', show_shapes=True)
         #Generator単体では学習を行わないのでコンパイル不要
 
         self.combined = model.build_combined(self.z_dim, self.generator, self.discriminator)
