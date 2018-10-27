@@ -8,6 +8,8 @@ from keras.optimizers import Adam
 
 import numpy as np
 import matplotlib.pyplot as plt
+import subprocess as sp
+import h5py
 import os, sys, glob
 import argparse
 import model
@@ -115,11 +117,11 @@ class GAN():
                 g_loss = self.combined.train_on_batch(noise, valid_y)
                 
                 print ("epoch:%d, iter:%d,  [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, iteration, d_loss[0], 100*d_loss[1], g_loss))
-                if iteration % self.save_interval == 0:
+                #if iteration % self.save_interval == 0:
             if epoch % 300 == 0:
                 self.save_imgs(epoch, iteration)
                 send_img_path = './result_image/pokemon_%d_%d.png' % (epoch,iteration)
-                send_image( send_img_path, args.line_token, 
+                self.send_image( send_img_path, args.line_token, 
                         "Epoch: %s, sent a image: current_batch_validation.png !" % (epoch) )
 
                 """ save model weights """
