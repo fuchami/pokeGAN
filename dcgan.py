@@ -1,18 +1,14 @@
 # coding:utf-8
 
 from keras.datasets import mnist
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout
-from keras.layers import BatchNormalization, Activation, ZeroPadding2D
-from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.convolutional import UpSampling2D, Conv2D
-from keras.models import Sequential, Model, load_model
-from keras.optimizers import Adam
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, glob
+import argparse
+import model
 
 class GAN():
     def __init__(self):
@@ -48,7 +44,6 @@ class GAN():
         self.X_train = []
     
     def load_img_data(self):
-        
 
         path = self.master_path
         g_path_list = glob.glob(path)
@@ -72,68 +67,7 @@ class GAN():
         print ("img_files:" ,cnt)
         return (np.array(X))
 
-    def build_generator(self):
-        
-        noise_shape = (self.z_dim,)
-        model = Sequential()
 
-
-        model.add(Dense(128*16*16, input_shape=noise_shape))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Reshape((16,16,128)))
-        model.add(BatchNormalization(momentum=0.8))
-        model.add(UpSampling2D())
-
-        model.add(Conv2D(128, kernel_size=3, padding='same'))
-        #model.add(Activation('relu'))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(BatchNormalization(momentum=0.8))
-        model.add(UpSampling2D())
-
-        model.add(Conv2D(64, kernel_size=3, padding='same'))
-        #model.add(Activation('relu'))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(BatchNormalization(momentum=0.8))
-        
-        model.add(Conv2D(3, kernel_size=3, padding='same'))
-        model.add(Activation('tanh'))
-
-        model.summary()
-        return model
-
-    def build_discriminator(self):
-        
-        img_shape = (self.img_rows, self.img_cols, self.channels)
-
-        model = Sequential()
-
-        model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=img_shape, padding='same'))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        
-        model.add(Conv2D(64, kernel_size=3, strides=2, padding='same'))
-        model.add(ZeroPadding2D(padding=((0,1), (1,0))))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
-
-        model.add(Conv2D(128, kernel_size=3, strides=2, padding='same'))
-        model.add(ZeroPadding2D(padding=((0,1), (1,0))))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-
-        model.add(Conv2D(256, kernel_size=3, strides=1, padding='same'))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-
-
-        model.add(Flatten())
-        model.add(Dense(1))        
-        model.add(Activation('sigmoid'))  
-
-        model.summary()
-
-        return model
 
     def build_combined(self):
         z = Input(shape=(self.z_dim,))
@@ -214,8 +148,18 @@ class GAN():
         plt.close()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Train pokemon generate model using DCGAN')
+    parser.add_argument('--datasetpath', '-p', type=str, required=True)
+    parser.add_argument('--imgsize', '-s', default=64)
+    parser.add_argument('--epoch', '-e', default=30000)
+    parser.add_argument('--channels', '-c', default=3)
+    parser.add_argument('--zdims', '-d', default=100)
+    parser.add_argument('--batchsie', '-b', default=64)
+    parser.add_argument('--saveinterval', '-i', default=100)
+    parser.add_argument('--line_token', '-l', type=str, required=False)
 
-    master_path = '/mnt/HDD1/GAN_work/pokeGAN/set_Data/'
-    gan = GAN()
+    args = parser.parse_args()
+
+    gan = GAN(args)
     
-    gan.train(epochs=30000, batch_size=64, save_interval=100)
+    gan.train()
