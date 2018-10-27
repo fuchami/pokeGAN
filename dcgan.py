@@ -39,7 +39,7 @@ class GAN():
             os.makedirs('./result_image/')
 
         # discriminator model
-        self.discriminator = model.build_discriminator()
+        self.discriminator = model.build_discriminator(self.img_shape)
         plot_model(self.discriminator, to_file='./images/model/discriminator.png', show_shapes=True)
         self.discriminator.compile(loss= 'binary_crossentropy',
             optimizer=discriminator_optimizer,

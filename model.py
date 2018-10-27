@@ -43,9 +43,7 @@ def build_generator(z_dim):
     return model
 
 # Discriminator
-def build_discriminator(img_rows, img_cols, channels):
-    
-    img_shape = (img_rows, img_cols, channels)
+def build_discriminator(img_shape):
 
     model = Sequential()
 
