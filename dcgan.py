@@ -25,7 +25,7 @@ class GAN():
         self.z_dim = args.zdims
         self.batch_size = args.batchsize
         self.epochs = args.epochs
-        self.saveinterval = args.saveinterval
+        self.save_interval = args.saveinterval
         # define opt params
         discriminator_optimizer = Adam(lr=1e-5, beta_1=0.1)
         combined_optimizer = Adam(lr=2e-4, beta_1=0.5)
@@ -112,6 +112,8 @@ class GAN():
                 if iteration % self.save_interval == 0:
                     self.save_imgs(epoch, iteration)
             if epoch % 5000 == 0:
+                json_string = self.generator.to_json()
+                open('./saved_model/dcgan-{}-epoch.json', 'w').write(json_string)
                 self.generator.save("./saved_model/dcgan-{}-epoch.h5".format(epoch))
 
     def save_imgs(self, epoch,iteration):
