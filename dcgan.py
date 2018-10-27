@@ -77,26 +77,17 @@ class GAN():
         return (np.array(X))
 
     def train(self):
-        """
-        # mnist road
-        (X_train, _), (_, _) = mnist.load_data()
-
-        # 値を-1 to 1に規格化
-        X_train = (X_train.astype(np.float32) - 127.5) / 127.5
-        X_train = np.expand_dims(X_train, axis=3)"""
 
         X_train = self.load_img_data() 
-
         X_train = (X_train.astype(np.float32) - 127.5) / 127.5
         #X_train = np.expand_dims(X_train, axis=0)
 
-        half_batch = int(batch_size /2)
+        half_batch = int(self.batch_size /2)
 
         num_batches = int(X_train.shape[0] / half_batch)
         print('number of batches:', num_batches)
 
         for epoch in range(self.epochs):
-            
             for iteration in range(num_batches):
 
                 # taining for Discriminator
@@ -108,12 +99,9 @@ class GAN():
 
                 d_loss_read = self.discriminator.train_on_batch(imgs, np.ones((half_batch,1)))
                 d_loss_fake = self.discriminator.train_on_batch(gen_imgs, np.zeros((half_batch, 1)))
-
                 d_loss = 0.5 * np.add(d_loss_read, d_loss_fake)
 
-
                 # training for Generator
-
                 noise = np.random.normal(-1,1, (self.batch_size, self.z_dim))
 
                 # 生成データの正解ラベルは本物(1)
