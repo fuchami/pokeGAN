@@ -31,9 +31,9 @@ def main(args):
 
 if __name__ == '__main__' :
     parser = argparse.ArgumentParser(description='convert png to jpg image file')
-    parser.add_argument('originpath', '-o', type=str, required=True)
-    parser.add_argument('convertpath', '-t', type=str, required=True)
-    parser.add_argument('generation', '-g', type=str, default='rs/', required=True)
+    parser.add_argument('--originpath', '-o', type=str, required=True)
+    parser.add_argument('--convertpath', '-t', type=str, required=True)
+    parser.add_argument('--generation', '-g', type=str, default='rs/', required=True)
 
     args = parser.parse_args()
     main(args)
