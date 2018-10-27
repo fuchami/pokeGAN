@@ -10,7 +10,6 @@ from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
-from keras.optimizers import Adam
 
 import numpy as np
 
@@ -76,4 +75,13 @@ def build_discriminator(img_rows, img_cols, channels):
 
     model.summary()
 
+    return model
+
+def build_combined(z_dim, generator, discriminator):
+    z = Input(shape=(z_dim,))
+    img = generator(z)
+    discriminator.trainable = False
+    valid = discriminator(img)
+    model = Model(z, valid)
+    model.summary()
     return model
