@@ -25,7 +25,7 @@ class GAN():
         self.z_dim = args.zdims
         self.batch_size = args.batchsize
         self.epochs = args.epochs
-        self.save_interval = args.saveinterval
+        self.saveinterval = args.saveinterval
         # define opt params
         discriminator_optimizer = Adam(lr=1e-5, beta_1=0.1)
         combined_optimizer = Adam(lr=2e-4, beta_1=0.5)
@@ -39,7 +39,7 @@ class GAN():
             os.makedirs('./result_image/')
 
         # discriminator model
-        self.discriminator = model.build_discriminator(self.img_shape)
+        self.discriminator = model.build_discriminator()
         plot_model(self.discriminator, to_file='./images/model/discriminator.png', show_shapes=True)
         self.discriminator.compile(loss= 'binary_crossentropy',
             optimizer=discriminator_optimizer,
@@ -54,6 +54,12 @@ class GAN():
         self.combined.compile(loss='binary_crossentropy', optimizer=combined_optimizer)
 
         self.X_train = []
+
+    # Line API
+    def send_image(self, path_to_img, line_notify_token, m):
+        line_notify_api = 'https://notify-api.line.me/api/notify'
+        sp.getoutput(
+            "curl -X POST {} -H 'Authorization: Bearer {}' -F 'message={}' -F 'imageFile=@{}'".format(line_notify_api, line_notify_token, m, path_to_img))
     
     def load_img_data(self):
         path = self.master_path
@@ -110,10 +116,14 @@ class GAN():
                 
                 print ("epoch:%d, iter:%d,  [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, iteration, d_loss[0], 100*d_loss[1], g_loss))
                 if iteration % self.save_interval == 0:
-                    self.save_imgs(epoch, iteration)
-            if epoch % 5000 == 0:
-                json_string = self.generator.to_json()
-                open('./saved_model/dcgan-{}-epoch.json', 'w').write(json_string)
+            if epoch % 300 == 0:
+                self.save_imgs(epoch, iteration)
+                send_img_path = './result_image/pokemon_%d_%d.png' % (epoch,iteration)
+                send_image( send_img_path, args.line_token, 
+                        "Epoch: %s, sent a image: current_batch_validation.png !" % (epoch) )
+
+                """ save model weights """
+                open('./saved_model/dcgan-{}-epoch.json', 'w')
                 self.generator.save("./saved_model/dcgan-{}-epoch.h5".format(epoch))
 
     def save_imgs(self, epoch,iteration):

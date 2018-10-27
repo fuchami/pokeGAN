@@ -4,4 +4,4 @@
 .json
 .h5
 
-./result_image/*
+./result_image/*.png
