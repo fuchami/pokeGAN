@@ -1,10 +1,7 @@
 # coding:utf-8
-
 """
 jpeg画像を読み込んでネットワークに投げるまでの作業
-
 """
-
 from keras.preprocessing import image
 import sys,os
 import glob

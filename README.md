@@ -2,7 +2,7 @@
 
 DCGANを用いてポケモンのドット絵を生成する
 
-# denoise result
+# result
 
 ### pix2pix_current_batch_validation.png
 
