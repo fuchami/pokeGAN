@@ -1,9 +1,19 @@
-# Pix2Pix for Denoise
+# pokemon GAN
 
 DCGANを用いてポケモンのドット絵を生成する
 
 # result
 
+### epoch 0
+![epoch0](./images/epoch0.png)
+
+### epoch 300
+![epoch300](./images/epoch300.png)
+
+### epoch 10000~
+![result1](./images/result1.png)
+![result2](./images/result2.png)
+![result3](./images/result3.png)
 
 # code
 以下コードの説明
