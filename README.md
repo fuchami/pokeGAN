@@ -50,7 +50,7 @@ dcgan.pyから呼び出し
 dcgan,pyから呼び出し
 
 ## gan.py
-GANの学習スクリプト
+GANの学習スクリプト
 
 ## png2jpg.py
 pngの画像をjpg形式に変換するスクリプト
